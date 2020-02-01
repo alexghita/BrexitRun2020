@@ -20,12 +20,7 @@ public class DateIntervalRecordScannerTest {
     private DateIntervalRecordScanner scanner;
 
     @Test
-    public void scannerCreationWorksWithExistingFile() {
-        scanner = new DateIntervalRecordScanner(TEST_FILE_PATH);
-    }
-
-    @Test
-    public void readTest() {
+    public void givenValidFilePath_whenScannerReadsAllDates_thenScannerReturnsCorrectListOfDates() {
         scanner = new DateIntervalRecordScanner(TEST_FILE_PATH);
         List<DateInterval> expectedResult = new ArrayList<>(List.of(
                 new DateInterval(LocalDate.parse("2010-01-01"), LocalDate.parse("2010-01-10")),
@@ -36,30 +31,30 @@ public class DateIntervalRecordScannerTest {
     }
 
     @Test
-    public void readFromNonexistentFileReturnsEmptyList() {
+    public void givenNonexistentFile_whenScannerReadsAllIntervals_thenScannerReturnsEmptyList() {
         scanner = new DateIntervalRecordScanner("");
         assertEquals(Collections.emptyList(), scanner.readAllIntervals());
     }
 
     @Test
-    public void scannerCreationWithInvalidDatePatternThrowsException() {
+    public void givenInvalidDatePattern_whenConstructingScanner_thenScannerThrowsException() {
         assertThrows(IllegalArgumentException.class, () -> new DateIntervalRecordScanner(TEST_FILE_PATH, INVALID_DATE_PATTERN));
     }
 
     @Test
-    public void readWithInvalidInputThrowsException() {
+    public void givenTooManyInputValuesPerLine_whenReadingAllIntervals_thenScannerThrowsException() {
         scanner = new DateIntervalRecordScanner(TOO_MANY_VALUES_PER_LINE_TEST_FILE_PATH);
         assertThrows(InputMismatchException.class, () -> scanner.readAllIntervals());
     }
 
     @Test
-    public void readWithIncorrectFormat() {
+    public void givenInputFileWithBadlyFormattedDates_whenReadingAllIntervals_thenScannerThrowsException() {
         scanner = new DateIntervalRecordScanner(BADLY_FORMATTED_FILE_PATH);
         assertThrows(DateTimeParseException.class, () -> scanner.readAllIntervals());
     }
 
     @Test
-    public void readWhenNoInputLeft() {
+    public void givenEmptyInputFile_whenReadingAllIntervals_thenScannerReturnsEmptyList() {
         scanner = new DateIntervalRecordScanner(EMPTY_FILE_PATH);
         assertEquals(Collections.emptyList(), scanner.readAllIntervals());
     }
